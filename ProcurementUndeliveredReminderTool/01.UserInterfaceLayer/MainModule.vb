@@ -7,6 +7,10 @@ Module MainModule
 
         Console.Title = $"{My.Application.Info.Title} V{AppSettingHelper.Instance.ProductVersion}"
 
+        Console.WriteLine($"{Now:G}> 通知发送时间 :{AppSettingHelper.Instance.SendMsgTime}")
+        Console.WriteLine($"{Now:G}> 提前提醒天数 :{AppSettingHelper.Instance.AdvanceNoticeDays}")
+        Console.WriteLine($"{Now:G}> 上次通知发送时间 :{AppSettingHelper.Instance.LastSendDate}")
+
 #Region "初始化"
         ' 单例模式
         Dim tmpProcess = Process.GetCurrentProcess()
@@ -23,16 +27,17 @@ Module MainModule
         ExcelPackage.LicenseContext = LicenseContext.NonCommercial
 
         Do
+            Threading.Thread.Sleep(60 * 1000)
 
             ' 定时发送
             If Now.Hour <> AppSettingHelper.Instance.SendMsgTime.Hours OrElse
             Now.Minute <> AppSettingHelper.Instance.SendMsgTime.Minutes Then
-                Exit Sub
+                Continue Do
             End If
 
             ' 一天只自动发送一次
             If AppSettingHelper.Instance.LastSendDate = Now.Date Then
-                Exit Sub
+                Continue Do
             End If
             AppSettingHelper.Instance.LastSendDate = Now.Date
 
@@ -122,11 +127,11 @@ Module MainModule
             End If
 
             Console.WriteLine($"{Now:G}> 处理完成")
-            Threading.Thread.Sleep(60 * 1000)
+
+            'Exit Do
         Loop
 
-        AppSettingHelper.SaveToLocaltion()
-        AppSettingHelper.Instance.ClearTempFiles()
+        'Console.ReadLine()
 
     End Sub
 

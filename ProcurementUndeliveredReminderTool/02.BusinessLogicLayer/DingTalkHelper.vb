@@ -96,7 +96,7 @@ Public Class DingTalkHelper
         Dim client = New DefaultDingTalkClient("https://oapi.dingtalk.com/topapi/message/corpconversation/asyncsend_v2")
         Dim req = New OapiMessageCorpconversationAsyncsendV2Request()
         req.AgentId = AppSettingHelper.Instance.DingTalkAgentId
-        req.UseridList = "3349644230885065"
+        req.UseridList = dingTalkUserid '"3349644230885065"
         Dim obj1 = New OapiMessageCorpconversationAsyncsendV2Request.MsgDomain()
         obj1.Msgtype = "file"
         Dim obj2 = New OapiMessageCorpconversationAsyncsendV2Request.FileDomain()

@@ -255,7 +255,7 @@ Public Class AppSettingHelper
     ''' <summary>
     ''' 本地数据库地址
     ''' </summary> 
-    Public Shared SQLiteConnection As String = $"data source= \Data\LocalDatabase.db"
+    Public Shared SQLiteConnection As String = $"data source= .\Data\LocalDatabase.db"
 
     ''' <summary>
     ''' 上次发送的日期

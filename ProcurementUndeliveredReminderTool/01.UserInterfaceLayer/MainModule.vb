@@ -7,9 +7,9 @@ Module MainModule
 
         Console.Title = $"{My.Application.Info.Title} V{AppSettingHelper.Instance.ProductVersion}"
 
-        Console.WriteLine($"{Now:G}> 通知发送时间 :{AppSettingHelper.Instance.SendMsgTime}")
-        Console.WriteLine($"{Now:G}> 提前提醒天数 :{AppSettingHelper.Instance.AdvanceNoticeDays}")
-        Console.WriteLine($"{Now:G}> 上次通知发送时间 :{AppSettingHelper.Instance.LastSendDate}")
+        Console.WriteLine($"{Now:G}> 通知发送时间: {AppSettingHelper.Instance.SendMsgTime}")
+        Console.WriteLine($"{Now:G}> 提前提醒天数: {AppSettingHelper.Instance.AdvanceNoticeDays}")
+        Console.WriteLine($"{Now:G}> 上次通知发送时间: {AppSettingHelper.Instance.LastSendDate}")
 
 #Region "初始化"
         ' 单例模式

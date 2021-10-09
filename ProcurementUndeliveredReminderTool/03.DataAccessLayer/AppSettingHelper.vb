@@ -264,7 +264,7 @@ Public Class AppSettingHelper
     Public Property LastSendDate As Date
         Get
             Dim tmpValue = LocalDatabaseHelper.GetOption(Of Date?)(NameOf(LastSendDate))
-            Return tmpValue.GetValueOrDefault(Now.AddDays(-1))
+            Return tmpValue.GetValueOrDefault(Now.AddDays(-1).Date)
         End Get
 
         Set(value As Date)

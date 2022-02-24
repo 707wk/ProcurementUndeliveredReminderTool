@@ -11,11 +11,13 @@ Public NotInheritable Class RemoteDatabaseHelper
     Private Shared Function GetUserJobNumberItems() As List(Of String)
         Dim tmpList As New List(Of String)
 
-        Using SqlConn As New SqlConnection(AppSettingHelper.Instance.ERPSqlServerConnStr)
-            SqlConn.Open()
+        Try
 
-            Using tmpSqlCommand = SqlConn.CreateCommand
-                tmpSqlCommand.CommandText = $"select
+            Using SqlConn As New SqlConnection(AppSettingHelper.Instance.ERPSqlServerConnStr)
+                SqlConn.Open()
+
+                Using tmpSqlCommand = SqlConn.CreateCommand
+                    tmpSqlCommand.CommandText = $"select
 PURTC.TC011,
 COUNT(PURTC.TC011)
 
@@ -40,26 +42,30 @@ and PURTC.TC002=tempPURTD.TD002
 group by PURTC.TC011
 "
 
-                Using tmpSqlDataReader = tmpSqlCommand.ExecuteReader
+                    Using tmpSqlDataReader = tmpSqlCommand.ExecuteReader
 
-                    While tmpSqlDataReader.Read
+                        While tmpSqlDataReader.Read
 
-                        Dim tmpValue = $"{tmpSqlDataReader(0)}".Trim
+                            Dim tmpValue = $"{tmpSqlDataReader(0)}".Trim
 
-                        If String.IsNullOrWhiteSpace(tmpValue) Then
-                            Continue While
-                        End If
+                            If String.IsNullOrWhiteSpace(tmpValue) Then
+                                Continue While
+                            End If
 
-                        tmpList.Add(tmpValue)
+                            tmpList.Add(tmpValue)
 
-                    End While
+                        End While
+
+                    End Using
 
                 End Using
 
+                SqlConn.Close()
             End Using
 
-            SqlConn.Close()
-        End Using
+        Catch ex As Exception
+
+        End Try
 
         Return tmpList
     End Function
@@ -89,11 +95,13 @@ group by PURTC.TC011
     Private Shared Function GetDocumentItemsByUserJobNumber(userJobNumber As String) As List(Of DocumentInfo)
         Dim tmpList As New List(Of DocumentInfo)
 
-        Using SqlConn As New SqlConnection(AppSettingHelper.Instance.ERPSqlServerConnStr)
-            SqlConn.Open()
+        Try
 
-            Using tmpSqlCommand = SqlConn.CreateCommand
-                tmpSqlCommand.CommandText = $"select
+            Using SqlConn As New SqlConnection(AppSettingHelper.Instance.ERPSqlServerConnStr)
+                SqlConn.Open()
+
+                Using tmpSqlCommand = SqlConn.CreateCommand
+                    tmpSqlCommand.CommandText = $"select
 RTRIM(CMSMV.MV002)+'('+RTRIM(CMSMV.MV001)+')' as 采购人员,
 RTRIM(PURMA.MA002)+'('+RTRIM(PURMA.MA001)+')' as 供应商简称,
 tempPURTD.TD001+'-'+tempPURTD.TD002+'-'+tempPURTD.TD003 as 采购单号,
@@ -138,35 +146,39 @@ where PURTC.TC011='{userJobNumber}'
 order by tempPURTD.TD012
 "
 
-                Using tmpSqlDataReader = tmpSqlCommand.ExecuteReader
+                    Using tmpSqlDataReader = tmpSqlCommand.ExecuteReader
 
-                    While tmpSqlDataReader.Read
+                        While tmpSqlDataReader.Read
 
-                        Dim tmpDocumentInfo = New DocumentInfo With {
-                            .CGRY = $"{tmpSqlDataReader(0)}",
-                            .GYSJC = $"{tmpSqlDataReader(1)}",
-                            .CGDH = $"{tmpSqlDataReader(2)}",
-                            .PH = $"{tmpSqlDataReader(3)}",
-                            .PM = $"{tmpSqlDataReader(4)}",
-                            .GG = $"{tmpSqlDataReader(5)}",
-                            .Unit = $"{tmpSqlDataReader(6)}",
-                            .CGSL = Val($"{tmpSqlDataReader(7)}"),
-                            .YJSL = Val($"{tmpSqlDataReader(8)}"),
-                            .WJSL = Val($"{tmpSqlDataReader(9)}"),
-                            .YJHR = Date.ParseExact($"{tmpSqlDataReader(10)}", "yyyyMMdd", Nothing),
-                            .Remark = $"{tmpSqlDataReader(11)}"
-                        }
+                            Dim tmpDocumentInfo = New DocumentInfo With {
+                                .CGRY = $"{tmpSqlDataReader(0)}",
+                                .GYSJC = $"{tmpSqlDataReader(1)}",
+                                .CGDH = $"{tmpSqlDataReader(2)}",
+                                .PH = $"{tmpSqlDataReader(3)}",
+                                .PM = $"{tmpSqlDataReader(4)}",
+                                .GG = $"{tmpSqlDataReader(5)}",
+                                .Unit = $"{tmpSqlDataReader(6)}",
+                                .CGSL = Val($"{tmpSqlDataReader(7)}"),
+                                .YJSL = Val($"{tmpSqlDataReader(8)}"),
+                                .WJSL = Val($"{tmpSqlDataReader(9)}"),
+                                .YJHR = Date.ParseExact($"{tmpSqlDataReader(10)}", "yyyyMMdd", Nothing),
+                                .Remark = $"{tmpSqlDataReader(11)}"
+                            }
 
-                        tmpList.Add(tmpDocumentInfo)
+                            tmpList.Add(tmpDocumentInfo)
 
-                    End While
+                        End While
+
+                    End Using
 
                 End Using
 
+                SqlConn.Close()
             End Using
 
-            SqlConn.Close()
-        End Using
+        Catch ex As Exception
+
+        End Try
 
         Return tmpList
     End Function
